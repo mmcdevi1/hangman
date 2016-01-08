@@ -8,8 +8,6 @@ module Hangman
     def welcome_message
       puts
       puts "Welcome to Hangman!"
-      puts "Press i at any time for instructions."
-      puts "Press q at any time to quit."
       puts
     end
 

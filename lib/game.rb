@@ -26,7 +26,6 @@ module Hangman
     def play
       @io.welcome_message
       loop do
-        puts random_word
         @io.enter_guess
         player_makes_guess
         check_players_guess
