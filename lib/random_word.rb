@@ -2,7 +2,7 @@ module Hangman
 
   class Word
     def self.list
-      File.readlines("../words.txt")
+      File.readlines(File.expand_path(__FILE__,"../../words.txt"))
     end
 
     def self.random
