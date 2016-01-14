@@ -28,7 +28,7 @@ module Hangman
       Incorrect Guess: #{player.incorrect_guesses.join(', ')}
       
       
-      Hangman: #{correct_letters.join}
+      Hangman: #{correct_letters}
       
       
       MSG

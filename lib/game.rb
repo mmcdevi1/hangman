@@ -27,9 +27,9 @@ module Hangman
       @io.welcome_message
       loop do
         @io.enter_guess
-        player_makes_guess
+        player.guess_letter
         check_players_guess
-        @io.results_for(player, correct_letters)
+        @io.results_for(player, guessed_word)
         if player_is_winner
           @io.quit
           break
@@ -39,39 +39,27 @@ module Hangman
 
     private
 
+    def correct?(letter)
+      random_word.include?(player.last_guess)
+    end
+
+    def guessed_word
+      random_word.split('').map { |letter|
+        player.correct_guesses.include?(letter) ? letter : "_"
+      }.join("")
+    end
+
     def player_is_winner
-      return true if correct_letters.join == random_word
-    end
-
-    def set_correct_letters_if_correct_guess
-      random_word.split('').each_with_index do |letter, index|
-        correct_letters[index] = letter if letter == players_last_guess
-      end
-    end
-
-    def set_correct_guesses
-      player.correct_guesses << players_last_guess
-    end
-
-    def set_incorrect_guesses
-      player.incorrect_guesses << players_last_guess
+      return true if guessed_word == random_word
     end
 
     def check_players_guess
-      if random_word.include?(players_last_guess)
-        set_correct_guesses
-        set_correct_letters_if_correct_guess
+      letter = player.last_guess
+      if correct? letter
+        player.correct_guesses << letter
       else
-        set_incorrect_guesses
+        player.incorrect_guesses << letter
       end
-    end
-
-    def players_last_guess
-      player.last_guess
-    end
-
-    def player_makes_guess
-      player.guess_letter
     end
 
   end
@@ -79,40 +67,3 @@ module Hangman
 end
 
 game = Hangman::Game.new
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
