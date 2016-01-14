@@ -14,7 +14,6 @@ module Hangman
       @player          = Player.new
       @io              = HangmanIO.new
       create_correct_letters_array
-      play
     end
 
     def create_correct_letters_array
@@ -66,4 +65,3 @@ module Hangman
 
 end
 
-game = Hangman::Game.new
