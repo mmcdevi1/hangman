@@ -14,21 +14,26 @@ module Hangman
     end
 
     def enter_guess
-      print 'Enter your guess: '
+      guess = ''
+      until guess.length == 1
+        print 'Enter your guess: '
+        guess = gets.chomp.downcase
+      end
+      guess
     end
 
-    def results_for(player, correct_letters)
+    def results_for(correct_letters, incorrect_letters, guessed_word)
       system_clear
       puts <<-MSG
       
       
-      Correct Guess: #{player.correct_guesses.join(', ')}"
+      Correct Guess: #{correct_letters.join(', ')}"
       
       
-      Incorrect Guess: #{player.incorrect_guesses.join(', ')}
+      Incorrect Guess: #{incorrect_letters.join(', ')}
       
       
-      Hangman: #{correct_letters}
+      Hangman: #{guessed_word}
       
       
       MSG

@@ -1,23 +1,22 @@
 require_relative 'word_list'
-require_relative 'player'
 require_relative 'hangman_io'
 
 module Hangman
 
   class Game
     def initialize
-      @correct_word    = WordList.random
-      @player          = Player.new
-      @io              = HangmanIO.new
+      @correct_word      = WordList.random
+      @correct_letters   = []
+      @incorrect_letters = []
+      @io                = HangmanIO.new
     end
 
     def play
       io.welcome_message
       loop do
-        io.enter_guess
-        player.guess_letter
-        check_players_guess
-        io.results_for(player, guessed_word)
+        guess = io.enter_guess
+        collect_guesses(guess)
+        io.results_for(correct_letters, incorrect_letters, guessed_word)
         if winner?
           io.quit
           break
@@ -27,15 +26,15 @@ module Hangman
 
     private
 
-    attr_reader :player, :io, :correct_word
+    attr_reader :player, :io, :correct_word, :correct_letters, :incorrect_letters
 
     def correct?(letter)
-      correct_word.include?(player.last_guess)
+      correct_word.include?(letter)
     end
 
     def guessed_word
       correct_word.split('').map { |letter|
-        player.correct_guesses.include?(letter) ? letter : "_"
+        @correct_letters.include?(letter) ? letter : "_"
       }.join("")
     end
 
@@ -43,12 +42,11 @@ module Hangman
       guessed_word == correct_word
     end
 
-    def check_players_guess
-      letter = player.last_guess
-      if correct? letter
-        player.correct_guesses << letter
+    def collect_guesses(guess)
+      if correct? guess
+        @correct_letters << guess
       else
-        player.incorrect_guesses << letter
+        @incorrect_letters << guess
       end
     end
 
