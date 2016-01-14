@@ -6,6 +6,7 @@ module Hangman
     end
 
     def welcome_message
+      system_clear
       puts <<-MSG
       
       Welcome to Hangman!
@@ -27,7 +28,7 @@ module Hangman
       puts <<-MSG
       
       
-      Correct Guess: #{correct_letters.join(', ')}"
+      Correct Guess: #{correct_letters.join(', ')}
       
       
       Incorrect Guess: #{incorrect_letters.join(', ')}
