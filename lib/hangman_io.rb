@@ -6,37 +6,46 @@ module Hangman
     end
 
     def welcome_message
-      puts
-      puts "Welcome to Hangman!"
-      puts
+      system_clear
+      puts <<-MSG
+      
+      Welcome to Hangman!
+      
+      MSG
     end
 
     def enter_guess
-      print 'Enter your guess: '
+      guess = ''
+      until guess.length == 1
+        print 'Enter your guess: '
+        guess = gets.chomp.downcase
+      end
+      guess
     end
 
-    def results_for(player, correct_letters)
+    def results_for(correct_letters, incorrect_letters, guessed_word)
       system_clear
-      puts
-      puts
-      puts "Correct Guess: "
-      print player.correct_guesses.join(', ')
-      puts
-      puts
-      puts "Incorrect Guess: "
-      print player.incorrect_guesses.join(', ')
-      puts
-      puts
-      puts "Hangman: "
-      print correct_letters.join
-      puts
-      puts
+      puts <<-MSG
+      
+      
+      Correct Guess: #{correct_letters.join(', ')}
+      
+      
+      Incorrect Guess: #{incorrect_letters.join(', ')}
+      
+      
+      Hangman: #{guessed_word}
+      
+      
+      MSG
     end
 
     def quit
-      puts
-      puts 'You guessed the correct word! Hooray!!'
-      puts
+      puts <<-MSG
+      
+      You guessed the correct word! Hooray!!
+      
+      MSG
     end
 
     def system_clear

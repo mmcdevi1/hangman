@@ -1,118 +1,53 @@
-require_relative 'random_word'
-require_relative 'player'
+require_relative 'word_list'
 require_relative 'hangman_io'
 
 module Hangman
 
   class Game
-    attr_accessor :player, :correct_letters
-    attr_reader :words, :random_word
-
     def initialize
-      @correct_letters = []
-      @random_word     = Word.random
-      @player          = Player.new
-      @io              = HangmanIO.new
-      create_correct_letters_array
-      play
-    end
-
-    def create_correct_letters_array
-      random_word.length.times do
-        @correct_letters << String.new('_')
-      end
+      @correct_word      = WordList.random
+      @correct_letters   = []
+      @incorrect_letters = []
+      @io                = HangmanIO.new
     end
 
     def play
-      @io.welcome_message
-      loop do
-        @io.enter_guess
-        player_makes_guess
-        check_players_guess
-        @io.results_for(player, correct_letters)
-        if player_is_winner
-          @io.quit
-          break
-        end
+      io.welcome_message
+      until winner?
+        guess = io.enter_guess
+        collect_guesses(guess)
+        io.results_for(correct_letters, incorrect_letters, guessed_word)
       end
+      io.quit
     end
 
     private
 
-    def player_is_winner
-      return true if correct_letters.join == random_word
+    attr_reader :player, :io, :correct_word, :correct_letters, :incorrect_letters
+
+    def correct?(letter)
+      correct_word.include?(letter)
     end
 
-    def set_correct_letters_if_correct_guess
-      random_word.split('').each_with_index do |letter, index|
-        correct_letters[index] = letter if letter == players_last_guess
-      end
+    def guessed_word
+      correct_word.split('').map { |letter|
+        @correct_letters.include?(letter) ? letter : "_"
+      }.join("")
     end
 
-    def set_correct_guesses
-      player.correct_guesses << players_last_guess
+    def winner?
+      guessed_word == correct_word
     end
 
-    def set_incorrect_guesses
-      player.incorrect_guesses << players_last_guess
-    end
-
-    def check_players_guess
-      if random_word.include?(players_last_guess)
-        set_correct_guesses
-        set_correct_letters_if_correct_guess
+    def collect_guesses(guess)
+      if correct? guess
+        @correct_letters << guess
       else
-        set_incorrect_guesses
+        @incorrect_letters << guess
       end
-    end
-
-    def players_last_guess
-      player.last_guess
-    end
-
-    def player_makes_guess
-      player.guess_letter
     end
 
   end
 
 end
-
-game = Hangman::Game.new
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
