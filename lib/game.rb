@@ -5,31 +5,21 @@ require_relative 'hangman_io'
 module Hangman
 
   class Game
-    attr_accessor :player
-    attr_reader :words, :random_word
-
     def initialize
-      @random_word     = WordList.random
+      @correct_word    = WordList.random
       @player          = Player.new
       @io              = HangmanIO.new
-      create_correct_letters_array
-    end
-
-    def create_correct_letters_array
-      random_word.length.times do
-        @correct_letters << String.new('_')
-      end
     end
 
     def play
-      @io.welcome_message
+      io.welcome_message
       loop do
-        @io.enter_guess
+        io.enter_guess
         player.guess_letter
         check_players_guess
-        @io.results_for(player, guessed_word)
+        io.results_for(player, guessed_word)
         if winner?
-          @io.quit
+          io.quit
           break
         end
       end
@@ -37,18 +27,20 @@ module Hangman
 
     private
 
+    attr_reader :player, :io, :correct_word
+
     def correct?(letter)
-      random_word.include?(player.last_guess)
+      correct_word.include?(player.last_guess)
     end
 
     def guessed_word
-      random_word.split('').map { |letter|
+      correct_word.split('').map { |letter|
         player.correct_guesses.include?(letter) ? letter : "_"
       }.join("")
     end
 
     def winner?
-      guessed_word == random_word
+      guessed_word == correct_word
     end
 
     def check_players_guess
