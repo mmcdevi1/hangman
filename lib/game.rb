@@ -1,16 +1,15 @@
-require_relative 'random_word'
+require_relative 'word_list'
 require_relative 'player'
 require_relative 'hangman_io'
 
 module Hangman
 
   class Game
-    attr_accessor :player, :correct_letters
+    attr_accessor :player
     attr_reader :words, :random_word
 
     def initialize
-      @correct_letters = []
-      @random_word     = Word.random
+      @random_word     = WordList.random
       @player          = Player.new
       @io              = HangmanIO.new
       create_correct_letters_array
@@ -29,7 +28,7 @@ module Hangman
         player.guess_letter
         check_players_guess
         @io.results_for(player, guessed_word)
-        if player_is_winner
+        if winner?
           @io.quit
           break
         end
@@ -48,8 +47,8 @@ module Hangman
       }.join("")
     end
 
-    def player_is_winner
-      return true if guessed_word == random_word
+    def winner?
+      guessed_word == random_word
     end
 
     def check_players_guess
