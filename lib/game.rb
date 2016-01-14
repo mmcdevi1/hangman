@@ -13,15 +13,12 @@ module Hangman
 
     def play
       io.welcome_message
-      loop do
+      until winner?
         guess = io.enter_guess
         collect_guesses(guess)
         io.results_for(correct_letters, incorrect_letters, guessed_word)
-        if winner?
-          io.quit
-          break
-        end
       end
+      io.quit
     end
 
     private
